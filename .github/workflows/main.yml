@@ -1,0 +1,37 @@
+
+name: Build SuperPowers Mod
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar o projeto
+        uses: actions/checkout@v4
+
+      - name: Instalar Java 21 na nuvem
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Configurar Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.12'
+
+      - name: Compilar o mod
+        run: gradle build --no-daemon
+
+      - name: Disponibilizar o JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: SuperPowers-1.21.5
+          path: build/libs/*.jar
